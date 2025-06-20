@@ -1,8 +1,8 @@
 <h1>INICIAR SESION</h1>
-<form [formGroup]="formularioIniciarSesion">
+<form [formGroup]="formularioIniciarSesion" (ngSubmit)="onSubmit()">
   <div>
-    <label>Correo Electrónico</label>
-    <input formControlName="correo">
+    <label for="correo">Correo Electrónico</label>
+    <input id="correo" formControlName="correo">
     <div *ngIf="correo.touched && correo.invalid">
       <div *ngIf="correo.errors?.['required']">Campo obligatorio</div>
       <div *ngIf="correo.errors?.['pattern']">Formato incorrecto (ej: ejemplo.com)</div>
@@ -10,11 +10,11 @@
   </div>
 
   <div>
-    <label for="contrasena">Contraseña</label>
-    <input type="password" id="contrasena" formControlName="contrasena" autocomplete="current-password">
-    <div *ngIf="contrasena.touched && contrasena.invalid">
-      <div *ngIf="contrasena.errors?.['required']">Campo obligatorio</div>
-      <div *ngIf="contrasena.errors?.['minlength'] || contrasena.errors?.['maxlength']">
+    <label for="password">Contraseña</label>
+    <input type="password" id="contrasena" formControlName="contrasenia">
+    <div *ngIf="contrasenia.touched && contrasenia.invalid">
+      <div *ngIf="contrasenia.errors?.['required']">Campo obligatorio</div>
+      <div *ngIf="contrasenia.errors?.['minlength'] || contrasenia.errors?.['maxlength']">
         La contraseña debe tener entre 3 y 15 caracteres
       </div>
     </div>
