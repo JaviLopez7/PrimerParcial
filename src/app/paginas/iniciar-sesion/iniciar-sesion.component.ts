@@ -32,5 +32,13 @@ export class IniciarSesionComponent {
     this.formularioIniciarSesion = new FormGroup(controles);
   }
 
-  
+get correo() {
+  return this.formularioIniciarSesion.get('correo')!;
+}
+
+get contrasena() {
+  return this.formularioIniciarSesion.get('contrasena')!;
+}
+
+
 }

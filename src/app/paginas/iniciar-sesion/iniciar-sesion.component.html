@@ -1,57 +1,30 @@
-<div>
-    <h1>Ingresar</h1>
-    <form [formGroup]=" formularioIniciarSesion">
-        <!-- Campo Correo Electrónico -->
-        <div>
-            <label for="exampleInputEmail1">Correo Electrónico</label>
-            <input formControlName="correo" type="email" id="exampleInputEmail1">
+<h1>INICIAR SESION</h1>
+<form [formGroup]="formularioIniciarSesion">
+  <div>
+    <label>Correo Electrónico</label>
+    <input formControlName="correo">
+    <div *ngIf="correo.touched && correo.invalid">
+      <div *ngIf="correo.errors?.['required']">Campo obligatorio</div>
+      <div *ngIf="correo.errors?.['pattern']">Formato incorrecto (ej: ejemplo.com)</div>
+    </div>
+  </div>
 
-            @if (( formularioIniciarSesion.controls['correo'].touched ||  formularioIniciarSesion.controls['correo'].dirty)
-            &&  formularioIniciarSesion.controls['correo'].invalid) {
+  <div>
+    <label for="contrasena">Contraseña</label>
+    <input type="password" id="contrasena" formControlName="contrasena" autocomplete="current-password">
+    <div *ngIf="contrasena.touched && contrasena.invalid">
+      <div *ngIf="contrasena.errors?.['required']">Campo obligatorio</div>
+      <div *ngIf="contrasena.errors?.['minlength'] || contrasena.errors?.['maxlength']">
+        La contraseña debe tener entre 3 y 15 caracteres
+      </div>
+    </div>
+  </div>
 
-                @if ( formularioIniciarSesion.controls['correo'].errors?.['required']) {
-                    <div>Campo obligatorio</div>
-                }
-                @if ( formularioIniciarSesion.controls['correo'].errors?.['pattern']) {
-                    <div>El correo tiene un formato incorrecto, ej: example&#64;dom.com</div>
-                }
-            }
+  <div>
+    <button type="submit" [disabled]="formularioIniciarSesion.invalid">Ingresar</button>
+  </div>
 
-            @if ( formularioIniciarSesion.controls['correo'].touched &&  formularioIniciarSesion.controls['correo'].valid) {
-                <div>Campo correcto</div>
-            }
-        </div>
-
-        <!-- Campo Contraseña -->
-        <div>
-            <label for="exampleInputPassword1">Contraseña</label>
-            <input formControlName="contrasena" type="password" id="exampleInputPassword1">
-
-            @if (( formularioIniciarSesion.controls['contrasena'].touched ||  formularioIniciarSesion.controls['contrasena'].dirty)
-                &&  formularioIniciarSesion.controls['contrasena'].invalid) {
-
-                @if ( formularioIniciarSesion.controls['contrasena'].errors?.['required']) {
-                    <div>Campo obligatorio</div>
-                }
-                @if ( formularioIniciarSesion.controls['contrasena'].errors?.['minlength']
-                    ||  formularioIniciarSesion.controls['contrasena'].errors?.['maxlength']) {
-                    <div>La contraseña debe tener entre 3 y 15 caracteres</div>
-                }
-            }
-
-            @if ( formularioIniciarSesion.controls['contrasena'].touched &&  formularioIniciarSesion.controls['contrasena'].valid) {
-                <div>Campo correcto</div>
-            }
-        </div>
-
-        <!-- Botones de acción -->
-        <div>
-            <button type="submit">Ingresar</button>
-        </div>
-
-        <div>
-            ¿No tenes cuenta?<a routerLink="/registrar-usuario">Registrate acá</a>
-        </div>
-
-    </form>
-</div>
+  <div>
+    ¿No tenés cuenta? <a routerLink="/registrar-usuario">Registrate acá</a>
+  </div>
+</form>
