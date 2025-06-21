@@ -11,7 +11,7 @@ app.use(cors());
 // Obtener la conexión a la base de datos
 var db = conectar(); // Llama a conectar y guarda la conexión
 
-// Ruta de registro
+// Ruta de registro de usuarios
 app.post('/registro', (req, res) => {
   const { nombre, apellido, correo, contrasenia } = req.body;
   // Aquí deberías agregar la lógica para guardar el usuario en la base de datos
@@ -59,9 +59,101 @@ app.post('/iniciarSesion', (req, res) => {
   });
 });
 
+// Ruta de registro de productos
+app.post('/registrarproducto', (req, res) => {
+  const { nombre, categoria, precio, descripcion, imagen } = req.body;
+  // Aquí deberías agregar la lógica para guardar el usuario en la base de datos
+  db.query('INSERT INTO productos (nombre, categoria, precio, descripcion, imagen) VALUES (?, ?, ?, ?, ?)', [nombre, categoria, precio, descripcion, imagen], (err, result) => {
+    if (err) {
+      return res.status(500).send('Error al registrar el producto');
+    }
+      res.status(201).json({ message: 'Producto registrado' });
+  });
+});
+
+app.get('/registrarproducto', (req, res) => {
+  db.query('SELECT * FROM productos', (err, results) => {
+    if (err) {
+      return res.status(500).send('Error al obtener productos');
+    }
+    res.json(results);
+  });
+});
+
+// Obtener todos los productos
+app.get('/registrarproducto', (req, res) => {
+  db.query('SELECT * FROM productos', (err, results) => {
+    if (err) {
+      return res.status(500).send('Error al obtener productos');
+    }
+    res.json(results);
+  });
+});
+
+// Obtener un producto por ID
+app.get('/registrarproducto/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM productos WHERE id = ?', [id], (err, results) => {
+    if (err) {
+      return res.status(500).send('Error al obtener el producto');
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json(results[0]);
+  });
+});
+
+
+// Ruta para actualizar un producto existente
+app.put('/registrarproducto/:id', (req, res) => {
+  const { id } = req.params;
+  const { nombre, categoria, precio, descripcion, imagen } = req.body;
+  
+  // Ejemplo con MySQL (ajusta según tu base de datos)
+  db.query(
+    'UPDATE productos SET nombre = ?, categoria = ?, precio = ?, descripcion = ?, imagen = ? WHERE id = ?',
+    [nombre, categoria, precio, descripcion, imagen, id],
+    (err, result) => {
+      if (err) {
+        console.error('Error al actualizar:', err);
+        return res.status(500).json({ error: 'Error al actualizar el producto' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+      res.status(200).json({ message: 'Producto actualizado correctamente' });
+    }
+  );
+});
+
+app.delete('/registrarproducto/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+
+    // Verifica si el ID es un número válido
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    // Elimina el producto de la base de datos
+    db.query('DELETE FROM productos WHERE id = ?', [id], (err, result) => {
+        if (err) {
+            console.error('Error al eliminar el producto:', err);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+
+        // Verifica si se eliminó algún producto
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        res.json({ message: 'Producto eliminado exitosamente' });
+    });
+});
+
 
 
 // Iniciar el servidor
 app.listen( process.env.PORT || 3000, () => {
     console.log('escuchando el puerto');
-})
+});
