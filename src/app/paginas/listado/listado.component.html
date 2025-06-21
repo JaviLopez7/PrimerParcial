@@ -1,0 +1,15 @@
+<!-- Barra de búsqueda -->
+<input 
+  type="text" 
+  placeholder="Buscar por nombre o categoría" 
+  [(ngModel)]="terminoBusqueda"
+/>
+
+<!-- Lista de productos filtrados -->
+<table>
+  <tr *ngFor="let producto of productos | filtroProductos: terminoBusqueda">
+    <td>{{ producto.nombre }}</td>
+    <td>{{ producto.categoria }}</td>
+    <td>{{ producto.precio | currency }}</td>
+  </tr>
+</table>

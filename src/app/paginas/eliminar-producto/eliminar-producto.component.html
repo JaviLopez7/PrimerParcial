@@ -1,0 +1,30 @@
+<h2>Seleccione el producto a eliminar</h2>
+
+<table>
+  <tr *ngFor="let producto of productos">
+    <td>{{ producto.nombre }}</td>
+    <td>{{ producto.categoria }}</td>
+    <td>{{ producto.precio }}</td>
+    <td>
+      <button (click)="prepararEliminacion(producto)">Eliminar</button>
+    </td>
+  </tr>
+</table>
+
+<!-- Modal de confirmación -->
+<div *ngIf="productoAEliminar" class="modal-confirmacion">
+  <div class="modal-contenido">
+    <h3>Confirmar eliminación</h3>
+    <p>¿Está seguro que desea eliminar "{{productoAEliminar.nombre}}"?</p>
+    
+    <div class="botones-accion">
+      <button 
+        (click)="confirmarEliminacion()"
+        [disabled]="eliminando">
+        {{ eliminando ? 'Eliminando...' : 'Confirmar' }}
+      </button>
+      <button (click)="cancelarEliminacion()">Cancelar</button>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,30 @@
+<h2>Registro de Producto</h2>
+
+<form #productoForm="ngForm" (ngSubmit)="onSubmit()"> <!-- Eliminado $event -->
+  <div>
+    <label>Nombre:</label>
+    <input type="text" name="nombre" [(ngModel)]="nombre" required>
+  </div>
+
+  <div>
+    <label>Categoría:</label>
+    <input type="text" name="categoria" [(ngModel)]="categoria" required>
+  </div>
+
+  <div>
+    <label>Precio:</label>
+    <input type="number" name="precio" [(ngModel)]="precio" required>
+  </div>
+
+  <div>
+    <label>Descripción:</label>
+    <textarea name="descripcion" [(ngModel)]="descripcion" required></textarea>
+  </div>
+
+  <div>
+    <label>Imagen (URL):</label>
+    <input type="text" name="imagen" [(ngModel)]="imagen" required>
+  </div>
+
+  <button type="submit">Guardar Producto</button>
+</form>
