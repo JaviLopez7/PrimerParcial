@@ -1,0 +1,27 @@
+<div>
+  <h2>Productos Disponibles</h2>
+
+  <p *ngIf="tipoCambio">Tipo de cambio USD: {{ tipoCambio }}</p> <!-- Muestra el tipo de cambio -->
+
+  <table>
+    <tr *ngFor="let producto of productosDisponibles">
+      <td>{{ producto.nombre }}</td>
+      <td>{{ producto.categoria }}</td>
+      <td>{{ producto.precio | currency:'ARS' }}</td>
+      <td>
+        <button (click)="agregarAlCarrito(producto)">Seleccionar</button>
+      </td>
+    </tr>
+  </table>
+
+  <button (click)="confirmarSeleccion()" [disabled]="productosSeleccionados.length === 0">
+    Confirmar selección
+  </button>
+
+  <!-- Componente de factura -->
+  <app-factura 
+    *ngIf="mostrarFactura"
+    [productos]="productosSeleccionados"
+    (confirmarCompra)="manejarConfirmacionCompra($event)">
+  </app-factura>
+</div>

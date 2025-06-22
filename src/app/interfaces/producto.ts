@@ -3,4 +3,5 @@ export interface Producto {
   nombre: string; // Asegúrate de que sea obligatorio
   categoria: string; // Asegúrate de que sea obligatorio
   precio: number; // O cualquier otra propiedad que tengas
+  cantidad?: number;
 }

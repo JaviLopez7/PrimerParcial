@@ -9,6 +9,8 @@ import { ListadoComponent } from './paginas/listado/listado.component';
 import { EditarComponent } from './paginas/editar/editar.component';
 import { EditarProductoComponent } from './paginas/editar-producto/editar-producto.component';
 import { EliminarProductoComponent } from './paginas/eliminar-producto/eliminar-producto.component';
+import { FacturaCarritoComponent } from './paginas/factura-carrito/factura-carrito.component';
+import { FacturaComponent } from './paginas/factura/factura.component';
 
 export const routes: Routes = [
   { path: '', component: IniciarSesionComponent },
@@ -21,6 +23,8 @@ export const routes: Routes = [
   { path: 'gestion-producto/modificar', component: EditarComponent },
   { path: 'editar-producto/:id', component: EditarProductoComponent },
   { path: 'gestion-producto/baja', component: EliminarProductoComponent },
+  { path: 'factura-carrito', component: FacturaCarritoComponent },
+   { path: 'factura', component: FacturaComponent }, // Ruta para el componente de factura
   { path: '**', component: NoEncontradoComponent }
 ];
 
