@@ -1,7 +1,7 @@
 <div>
   <h2>Productos Disponibles</h2>
 
-  <p *ngIf="tipoCambio">Tipo de cambio USD: {{ tipoCambio }}</p> <!-- Muestra el tipo de cambio -->
+  <p *ngIf="tipoCambio">Tipo de cambio USD: {{ tipoCambio }}</p>
 
   <table>
     <tr *ngFor="let producto of productosDisponibles">
@@ -14,14 +14,15 @@
     </tr>
   </table>
 
-  <button (click)="confirmarSeleccion()" [disabled]="productosSeleccionados.length === 0">
+  <button 
+    (click)="confirmarSeleccion()" 
+    [disabled]="carritoService.obtenerProductos().length === 0">
     Confirmar selección
   </button>
 
-  <!-- Componente de factura -->
   <app-factura 
     *ngIf="mostrarFactura"
-    [productos]="productosSeleccionados"
+    [productos]="carritoService.obtenerProductos()"
     (confirmarCompra)="manejarConfirmacionCompra($event)">
   </app-factura>
 </div>

@@ -11,8 +11,13 @@ export class ServicoTipoCambioService {
 
   constructor(private http: HttpClient) { }
 
-  obtenerTipoCambio(fechaDesde: string, fechaHasta: string): Observable<any> {
-    return this.http.get(`${this.apiUrlBanco}?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`);
-  }
+  //getTipoCambio(fechaDesde: string, fechaHasta: string) {
+    //return this.http.get(`${this.apiUrlBanco}?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`);
+  //}
+
+  getTipoCambio(fechaDesde: string, fechaHasta: string) {
+  return this.http.get<{ tipoCotizacion: number }[]>(`${this.apiUrlBanco}?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`);
+}
+
 
 }

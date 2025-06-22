@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Producto } from '../../interfaces/producto';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
+import { ServicoTipoCambioService } from '../../servicios/servico-tipo-cambio.service';
+import { ServicioCarritoService } from '../../servicios/servicio-carrito.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FacturaComponent } from '../factura/factura.component';
-import { ServicoTipoCambioService } from '../../servicios/servico-tipo-cambio.service';
 
 
 @Component({
@@ -15,37 +16,30 @@ import { ServicoTipoCambioService } from '../../servicios/servico-tipo-cambio.se
 })
 export class FacturaCarritoComponent {
 
- productosDisponibles: Producto[] = []; // Todos los productos
-  productosSeleccionados: Producto[] = []; // Productos para facturar
-  mostrarFactura: boolean = false; // Controla visibilidad del hijo
-   tipoCambio: number = 0; // Almacena el tipo de cambio
+  productosDisponibles: Producto[] = [];
+  mostrarFactura: boolean = false;
+  tipoCambio: number = 0;
 
+  constructor(
+    private productoService: ServicioProductoService,
+    private tipoCambioService: ServicoTipoCambioService,
+    public carritoService: ServicioCarritoService // público para usar en template
+  ) {}
 
-  constructor(private productoService: ServicioProductoService, private tipoCambioService: ServicoTipoCambioService) {}
-  
   ngOnInit(): void {
     this.cargarProductos();
     this.obtenerTipoCambio();
   }
-  
-  cargarProductos() {
+
+  cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
-      next: (productos) => {
-        this.productosDisponibles = productos;
-      },
-      error: (err) => console.error('Error al cargar productos:', err)
+      next: productos => this.productosDisponibles = productos,
+      error: err => console.error('Error al cargar productos:', err)
     });
   }
 
-
-   agregarAlCarrito(producto: Producto): void {
-    const productoExistente = this.productosSeleccionados.find(p => p.id === producto.id);
-    
-    if (productoExistente) {
-      productoExistente.cantidad = (productoExistente.cantidad || 0) + 1;
-    } else {
-      this.productosSeleccionados.push({...producto, cantidad: 1});
-    }
+  agregarAlCarrito(producto: Producto): void {
+    this.carritoService.agregarProducto(producto);
   }
 
   confirmarSeleccion(): void {
@@ -59,21 +53,21 @@ export class FacturaCarritoComponent {
     tipoCambio: number
   }): void {
     console.log('Compra confirmada!', datosCompra);
-    // Aquí puedes manejar la lógica de la compra, como guardar en la base de datos o mostrar un mensaje al usuario
-    this.productosSeleccionados = []; // Limpiar el carrito
-    this.mostrarFactura = false; // Ocultar la factura
+    this.carritoService.vaciarCarrito();
+    this.mostrarFactura = false;
   }
 
-  obtenerTipoCambio() {
+  obtenerTipoCambio(): void {
     const hoy = new Date().toISOString().split('T')[0];
-    // Ahora pasamos los parámetros requeridos
-    this.tipoCambioService.obtenerTipoCambio(hoy, hoy).subscribe({
-      next: (data) => {
+    
+    this.tipoCambioService.getTipoCambio(hoy, hoy).subscribe({
+      next: data => {
         if (data && data.length > 0) {
-          this.tipoCambio = data[0].cotizacion;
+          this.tipoCambio = data[0].tipoCotizacion;
         }
       },
-      error: (err) => console.error('Error al obtener tipo de cambio:', err)
+      error: err => console.error('Error al obtener tipo de cambio:', err)
     });
   }
+  
 }

@@ -11,31 +11,47 @@ import { FormGroup, FormControl, FormsModule } from '@angular/forms';
   styleUrl: './alta.component.css'
 })
 export class AltaComponent {
+
+  // Propiedades del formulario
   nombre: string = '';
   categoria: string = '';
   precio: number = 0;
   descripcion: string = '';
   imagen: string = '';
   
+
   constructor(private productoService: ServicioProductoService) {}
-  onSubmit() {
+
+  // Acción al enviar el formulario
+  onSubmit(): void {
+    if (!this.nombre || !this.categoria || this.precio <= 0) {
+      alert('Por favor completá nombre, categoría y un precio mayor a 0.');
+      return;
+    }
+
     const producto = {
       nombre: this.nombre,
       categoria: this.categoria,
       precio: this.precio,
       descripcion: this.descripcion,
-      imagen: this.imagen
+      imagen: this.imagen,
+      cantidad: 0
     };
-    console.log('Datos a enviar:', producto);
+
+    // Enviar a la API
     this.productoService.crearProducto(producto).subscribe({
       next: () => {
         alert('¡Producto guardado!');
         this.limpiarFormulario();
       },
-      error: (err) => alert('Error: ' + err.message)
+      error: (err) => {
+        console.error('Error al guardar producto:', err);
+        alert('Ocurrió un error al guardar el producto.');
+      }
     });
   }
-  limpiarFormulario() {
+
+  limpiarFormulario(): void {
     this.nombre = '';
     this.categoria = '';
     this.precio = 0;

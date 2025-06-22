@@ -14,44 +14,52 @@ import { CommonModule } from '@angular/common';
 })
 export class EliminarProductoComponent {
 
-   productos: Producto[] = [];
+  productos: Producto[] = [];
   productoAEliminar: Producto | null = null;
   eliminando = false;
 
-   constructor(private productoService: ServicioProductoService) {}
-  
+  constructor(private productoService: ServicioProductoService) {}
+
   ngOnInit(): void {
     this.cargarProductos();
   }
-  
-  cargarProductos() {
+
+  cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
       next: (productos) => {
         this.productos = productos;
         console.log('Productos cargados:', productos);
       },
-      error: (err) => console.error('Error al cargar productos:', err)
+      error: (err) => {
+        console.error('Error al cargar productos:', err);
+      }
     });
   }
 
-   prepararEliminacion(producto: Producto) {
+  prepararEliminacion(producto: Producto): void {
     this.productoAEliminar = producto;
   }
-  confirmarEliminacion() {
+
+  confirmarEliminacion(): void {
     if (!this.productoAEliminar) return;
-    
+
     this.eliminando = true;
-    this.productoService.eliminarProducto(this.productoAEliminar.id)
-      .subscribe({
-        next: () => {
-          this.productos = this.productos.filter(p => p.id !== this.productoAEliminar?.id);
-          this.productoAEliminar = null;
-        },
-        error: (err) => console.error('Error al eliminar:', err),
-        complete: () => this.eliminando = false
-      });
+
+    this.productoService.eliminarProducto(this.productoAEliminar.id).subscribe({
+      next: () => {
+        this.productos = this.productos.filter(p => p.id !== this.productoAEliminar?.id);
+        this.productoAEliminar = null;
+      },
+      error: (err) => {
+        console.error('Error al eliminar producto:', err);
+      },
+      complete: () => {
+        this.eliminando = false;
+      }
+    });
   }
-  cancelarEliminacion() {
+
+  cancelarEliminacion(): void {
     this.productoAEliminar = null;
   }
   
