@@ -47,7 +47,11 @@ export class FacturaCarritoComponent implements OnInit, OnDestroy {
   cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
       next: productos => {
-        this.productosDisponibles = productos.map(p => ({ ...p, seleccionado: false, cantidad: 1 }));
+        this.productosDisponibles = productos.map(p => ({
+          ...p,
+          seleccionado: false,
+          cantidad: 1
+        }));
       },
       error: err => console.error('Error al cargar productos:', err)
     });
@@ -55,8 +59,11 @@ export class FacturaCarritoComponent implements OnInit, OnDestroy {
 
   actualizarCarrito(producto: Producto & { seleccionado?: boolean, cantidad?: number }): void {
     if (producto.seleccionado) {
-      const cantidad = producto.cantidad ?? 1;
-      this.carritoService.actualizarProducto({ ...producto, cantidad });
+      const productoConCantidad = {
+        ...producto,
+        cantidad: producto.cantidad ?? 1
+      };
+      this.carritoService.agregarProducto(productoConCantidad);
     } else {
       this.carritoService.eliminarProducto(producto.id);
     }
