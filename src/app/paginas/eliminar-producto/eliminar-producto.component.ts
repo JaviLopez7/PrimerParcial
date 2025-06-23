@@ -3,12 +3,14 @@ import { Producto } from '../../interfaces/producto';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HostListener } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-eliminar-producto',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,RouterLink],
   templateUrl: './eliminar-producto.component.html',
   styleUrl: './eliminar-producto.component.css'
 })
@@ -19,6 +21,14 @@ export class EliminarProductoComponent {
   eliminando = false;
 
   constructor(private productoService: ServicioProductoService) {}
+
+  @HostListener('document:keydown.escape', ['$event'])
+handleEscapeKey(event: KeyboardEvent) {
+  if (this.productoAEliminar) {
+    this.cancelarEliminacion();
+  }
+}
+
 
   ngOnInit(): void {
     this.cargarProductos();

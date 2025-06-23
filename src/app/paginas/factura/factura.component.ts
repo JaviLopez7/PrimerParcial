@@ -2,6 +2,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Producto } from '../../interfaces/producto';
 import { CommonModule } from '@angular/common';
 import { ServicoTipoCambioService } from '../../servicios/servico-tipo-cambio.service';
+import { RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-factura',
@@ -21,7 +26,13 @@ export class FacturaComponent {
 
   tipoCambio: number = 0;
 
-  constructor(private tipoCambioService: ServicoTipoCambioService) {}
+  constructor(
+  private tipoCambioService: ServicoTipoCambioService,
+  private location: Location,
+  private router: Router
+
+) {}
+
 
 ngOnInit(): void {
   // Fecha desde: 2024-01-01
@@ -83,5 +94,12 @@ ngOnInit(): void {
       tipoCambio: this.tipoCambio
     });
   }
+
+  onCancelarCompra(): void {
+  
+   this.location.forward()
+  console.log('Compra cancelada');
+}
+
   
 }

@@ -11,22 +11,15 @@ const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&
 
 @Component({
   selector: 'app-registrar-usuario',
+  standalone: true,
   imports: [ReactiveFormsModule, CommonModule, HttpClientModule],
   templateUrl: './registrar-usuario.component.html',
   styleUrl: './registrar-usuario.component.css'
 })
 export class RegistrarUsuarioComponent {
 
-  
-soloLetras(event: KeyboardEvent) {
-  const inputChar = event.key;
-  const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
-
-  if (!pattern.test(inputChar)) {
-    event.preventDefault();
-  }
-}
-
+  errorMsg: string = '';
+  registroExitoso: boolean = false;
 
   registerForm = new FormGroup({
     nombre: new FormControl('', [
@@ -49,6 +42,14 @@ soloLetras(event: KeyboardEvent) {
 
   constructor(private router: Router, private http: HttpClient) {}
 
+  soloLetras(event: KeyboardEvent) {
+    const inputChar = event.key;
+    const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
   onSubmit() {
     if (this.registerForm.invalid) {
       console.warn('Formulario inválido:', this.registerForm.value);
@@ -60,16 +61,30 @@ soloLetras(event: KeyboardEvent) {
         next: (response) => {
           console.log('Respuesta completa:', response);
           if (response.status === 201) {
-            console.log('Registro exitoso');
-            this.router.navigate(['/iniciar-sesion']);
+            this.errorMsg = '';
+            this.registroExitoso = true;
+            this.registerForm.reset();
+
+            // Esperar 2 segundos antes de redirigir
+            setTimeout(() => {
+              this.router.navigate(['/iniciar-sesion']);
+            }, 2000);
           }
         },
         error: (err) => {
           console.error('Error en el registro', err);
-          alert(err.error || 'Error al registrar el usuario');
+          this.registroExitoso = false;
+          if (err.status === 409) {
+            this.errorMsg = 'El correo ya está registrado.';
+          } else if (err.status === 400) {
+            this.errorMsg = 'Datos inválidos. Verificá el formulario.';
+          } else {
+            this.errorMsg = 'Ocurrió un error inesperado. Intentá nuevamente.';
+          }
         }
       });
   }
 }
+
 
 

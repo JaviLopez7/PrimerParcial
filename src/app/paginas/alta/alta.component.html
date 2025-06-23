@@ -1,4 +1,24 @@
 <!-- Cartel de éxito -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-opacity-75 shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/gestion">Gestión</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-2">
+        <li class="nav-item">
+          <a class="btn btn-outline-light" routerLink="/gestion-producto">Gestión de Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-light" routerLink="/factura-carrito">Gestión de Facturación</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
 <div *ngIf="mostrarMensajeExito"
      class="position-fixed top-50 start-50 translate-middle alert alert-success shadow-lg text-center px-5 py-4 fs-4"

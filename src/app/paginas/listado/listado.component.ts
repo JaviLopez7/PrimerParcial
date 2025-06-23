@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
 import { Producto } from '../../interfaces/producto';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-listado',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule,RouterLink],
   templateUrl: './listado.component.html',
   styleUrl: './listado.component.css'
 })

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Location } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-alta',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule],
+  imports: [FormsModule, CommonModule, HttpClientModule,RouterLink],
   templateUrl: './alta.component.html',
   styleUrl: './alta.component.css'
 })

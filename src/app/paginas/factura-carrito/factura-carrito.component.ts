@@ -6,12 +6,12 @@ import { ServicioCarritoService } from '../../servicios/servicio-carrito.service
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FacturaComponent } from '../factura/factura.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-factura-carrito',
   standalone: true,
-  imports: [FormsModule, CommonModule, FacturaComponent],
+  imports: [FormsModule, CommonModule, FacturaComponent,RouterLink],
   templateUrl: './factura-carrito.component.html',
   styleUrl: './factura-carrito.component.css'
 })

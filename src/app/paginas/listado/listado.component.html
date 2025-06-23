@@ -1,6 +1,29 @@
-<div class="container-fluid vh-100 d-flex justify-content-center align-items-center"
-     style="background: url('URL_DE_TU_IMAGEN') no-repeat center center; background-size: cover;">
-  <div class="card shadow-lg bg-light bg-opacity-75 p-4 w-100" style="max-width: 1000px;">
+<!-- Navbar fija -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-opacity-75 shadow fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/gestion">Gestión</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-2">
+        <li class="nav-item">
+          <a class="btn btn-outline-light" routerLink="/gestion-producto">Gestión de Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-light" routerLink="/factura-carrito">Gestión de Facturación</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenedor principal con fondo y margen para navbar -->
+<div class="container-fluid min-vh-100 pt-5 mt-5"
+     style="background: url('URL_DE_TU_IMAGEN') no-repeat center center fixed; background-size: cover;">
+  <div class="card shadow-lg bg-light bg-opacity-75 p-4 w-100 mx-auto" style="max-width: 1000px;">
     <h2 class="text-center mb-4">Listado de Productos</h2>
 
     <div class="mb-3">
@@ -57,4 +80,5 @@
     </table>
   </div>
 </div>
+
 

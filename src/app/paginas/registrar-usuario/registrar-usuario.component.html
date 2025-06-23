@@ -2,6 +2,11 @@
   <div class="card shadow p-4" style="width: 100%; max-width: 500px;">
     <h1 class="text-center mb-4">REGISTRAR USUARIO</h1>
 
+<div *ngIf="registroExitoso" class="alert alert-success text-center animate__animated animate__fadeIn">
+  ¡Usuario creado con éxito! Redirigiendo...
+</div>
+
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre</label>
@@ -40,6 +45,9 @@
           </div>
         </div>
       </div>
+      <div *ngIf="errorMsg" class="alert alert-danger text-center">
+  {{ errorMsg }}
+</div>
 
       <button type="submit" class="btn btn-success w-100" [disabled]="registerForm.invalid">Registrar</button>
     </form>
