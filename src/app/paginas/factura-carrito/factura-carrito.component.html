@@ -1,28 +1,58 @@
-<div>
-  <h2>Productos Disponibles</h2>
+<div class="container py-5">
+  <div class="card shadow-lg bg-light bg-opacity-75 p-4">
+    <h2 class="text-center mb-4">Productos Disponibles</h2>
 
-  <p *ngIf="tipoCambio">Tipo de cambio USD: {{ tipoCambio }}</p>
+    <div *ngIf="tipoCambio" class="alert alert-info text-center">
+      Tipo de cambio USD: {{ tipoCambio }}
+    </div>
 
-  <table>
-    <tr *ngFor="let producto of productosDisponibles">
-      <td>{{ producto.nombre }}</td>
-      <td>{{ producto.categoria }}</td>
-      <td>{{ producto.precio | currency:'ARS' }}</td>
-      <td>
-        <button (click)="agregarAlCarrito(producto)">Seleccionar</button>
-      </td>
-    </tr>
-  </table>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+        <thead class="table-primary">
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Seleccionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let producto of productosDisponibles">
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.categoria }}</td>
+            <td>{{ producto.precio | currency:'ARS' }}</td>
+            <td>
+              <input type="checkbox" [(ngModel)]="producto.seleccionado" (change)="actualizarCarrito(producto)" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <button 
-    (click)="confirmarSeleccion()" 
-    [disabled]="carritoService.obtenerProductos().length === 0">
-    Confirmar selección
-  </button>
+    <div class="text-end mt-3 d-flex justify-content-end gap-2">
+      <button 
+        class="btn btn-secondary"
+        *ngIf="mostrarFactura"
+        (click)="deshacerSeleccion()">
+        Deshacer
+      </button>
 
-  <app-factura 
-    *ngIf="mostrarFactura"
-    [productos]="carritoService.obtenerProductos()"
-    (confirmarCompra)="manejarConfirmacionCompra($event)">
-  </app-factura>
+      <button 
+        class="btn btn-primary"
+        (click)="confirmarSeleccion()" 
+        [disabled]="carritoService.obtenerProductos().length === 0">
+        Confirmar selección
+      </button>
+    </div>
+
+    <div class="mt-4" *ngIf="mostrarFactura">
+      <app-factura 
+        [productos]="carritoService.obtenerProductos()"
+        (confirmarCompra)="manejarConfirmacionCompra($event)">
+      </app-factura>
+    </div>
+  </div>
 </div>
+
+
+

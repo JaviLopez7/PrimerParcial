@@ -14,9 +14,12 @@ var db = conectar(); // Llama a conectar y guarda la conexión
 // Ruta de registro de usuarios
 app.post('/registro', (req, res) => {
   const { nombre, apellido, correo, contrasenia } = req.body;
+  console.log('Datos recibidos:', req.body); 
   db.query('INSERT INTO usuarios (nombre, apellido, correo_electronico, contrasenia) VALUES (?, ?, ?, ?)', [nombre, apellido, correo, contrasenia], (err, result) => {
     if (err) {
+      console.error('Error en la consulta:', err); 
       return res.status(500).send('Error al registrar el usuario');
+      
     }
       res.status(201).json({ message: 'Usuario registrado' });
   });

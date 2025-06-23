@@ -27,7 +27,12 @@
               }
             ],
             "styles": [
+              
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
+
             ],
             "scripts": []
           },
@@ -85,6 +90,10 @@
               }
             ],
             "styles": [
+              
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -92,5 +101,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e496ce16-f27b-4f9a-9668-736909bf705d"
   }
 }

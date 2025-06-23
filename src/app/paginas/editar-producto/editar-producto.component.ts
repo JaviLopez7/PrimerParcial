@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from '../../interfaces/producto';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-editar-producto',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,RouterLink],
   templateUrl: './editar-producto.component.html',
   styleUrl: './editar-producto.component.css'
 })
 export class EditarProductoComponent implements OnInit {
 
    producto!: Producto;
+   guardado: boolean = false;
   cargando = false;
   error: string | null = null;
 
@@ -50,6 +51,20 @@ export class EditarProductoComponent implements OnInit {
       this.error = 'Producto sin ID. No se puede actualizar.';
       return;
     }
+
+    
+this.productoService.actualizarProducto(this.producto.id, this.producto).subscribe({
+
+    next: () => {
+      this.guardado = true;
+      setTimeout(() => this.guardado = false, 3000); // Oculta el mensaje después de 3 segundos
+    },
+    error: (err) => {
+      console.error('Error al guardar cambios:', err);
+      alert('Ocurrió un error al guardar los cambios.');
+    }
+  });
+
 
     this.productoService.actualizarProducto(this.producto.id, this.producto).subscribe({
       next: () => {

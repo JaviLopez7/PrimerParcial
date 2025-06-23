@@ -7,23 +7,23 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FacturaComponent } from '../factura/factura.component';
 
-
 @Component({
   selector: 'app-factura-carrito',
-  imports: [FormsModule, CommonModule,FacturaComponent],
+  standalone: true,
+  imports: [FormsModule, CommonModule, FacturaComponent],
   templateUrl: './factura-carrito.component.html',
   styleUrl: './factura-carrito.component.css'
 })
 export class FacturaCarritoComponent {
 
-  productosDisponibles: Producto[] = [];
+  productosDisponibles: (Producto & { seleccionado?: boolean })[] = [];
   mostrarFactura: boolean = false;
   tipoCambio: number = 0;
 
   constructor(
     private productoService: ServicioProductoService,
     private tipoCambioService: ServicoTipoCambioService,
-    public carritoService: ServicioCarritoService // público para usar en template
+    public carritoService: ServicioCarritoService
   ) {}
 
   ngOnInit(): void {
@@ -33,13 +33,19 @@ export class FacturaCarritoComponent {
 
   cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
-      next: productos => this.productosDisponibles = productos,
+      next: productos => {
+        this.productosDisponibles = productos.map(p => ({ ...p, seleccionado: false }));
+      },
       error: err => console.error('Error al cargar productos:', err)
     });
   }
 
-  agregarAlCarrito(producto: Producto): void {
-    this.carritoService.agregarProducto(producto);
+  actualizarCarrito(producto: Producto & { seleccionado?: boolean }): void {
+    if (producto.seleccionado) {
+      this.carritoService.agregarProducto(producto);
+    } else {
+      this.carritoService.eliminarProducto(producto.id); // ✅ corregido aquí
+    }
   }
 
   confirmarSeleccion(): void {
@@ -56,10 +62,16 @@ export class FacturaCarritoComponent {
     this.carritoService.vaciarCarrito();
     this.mostrarFactura = false;
   }
+  
+deshacerSeleccion(): void {
+  this.mostrarFactura = false;
+  this.productosDisponibles.forEach(p => p.seleccionado = false);
+  this.carritoService.vaciarCarrito();
+}
+
 
   obtenerTipoCambio(): void {
     const hoy = new Date().toISOString().split('T')[0];
-    
     this.tipoCambioService.getTipoCambio(hoy, hoy).subscribe({
       next: data => {
         if (data && data.length > 0) {
@@ -69,5 +81,4 @@ export class FacturaCarritoComponent {
       error: err => console.error('Error al obtener tipo de cambio:', err)
     });
   }
-  
 }

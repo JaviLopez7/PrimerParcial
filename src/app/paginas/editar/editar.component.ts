@@ -7,21 +7,24 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-editar',
+  standalone: true,
   imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './editar.component.html',
   styleUrl: './editar.component.css'
 })
 export class EditarComponent {
 
-  productos: Producto[] = []; // Lista de productos
+  productos: Producto[] = [];
+  campoOrden: keyof Producto | '' = '';
+  ordenAscendente: boolean = true;
 
-   constructor(private productoService: ServicioProductoService) {}
-  
+  constructor(private productoService: ServicioProductoService) {}
+
   ngOnInit(): void {
     this.cargarProductos();
   }
-  
-  cargarProductos() {
+
+  cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
       next: (productos) => {
         this.productos = productos;
@@ -30,4 +33,23 @@ export class EditarComponent {
       error: (err) => console.error('Error al cargar productos:', err)
     });
   }
+
+  ordenarPor(campo: keyof Producto): void {
+    if (this.campoOrden === campo) {
+      this.ordenAscendente = !this.ordenAscendente;
+    } else {
+      this.campoOrden = campo;
+      this.ordenAscendente = true;
+    }
+
+    this.productos.sort((a, b) => {
+      const valorA = a[campo];
+      const valorB = b[campo];
+
+      if (valorA < valorB) return this.ordenAscendente ? -1 : 1;
+      if (valorA > valorB) return this.ordenAscendente ? 1 : -1;
+      return 0;
+    });
+  }
 }
+

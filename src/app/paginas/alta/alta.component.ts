@@ -1,33 +1,41 @@
 import { Component } from '@angular/core';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
-import { FormGroup, FormControl, FormsModule } from '@angular/forms';
-
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; // <-- necesario para *ngIf y ngClass
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-alta',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, HttpClientModule], // <-- agregá CommonModule y HttpClientModule
   templateUrl: './alta.component.html',
   styleUrl: './alta.component.css'
 })
 export class AltaComponent {
-
-  // Propiedades del formulario
   nombre: string = '';
   categoria: string = '';
   precio: number = 0;
   descripcion: string = '';
   imagen: string = '';
-  
+  categorias: string[] = [];
 
-  constructor(private productoService: ServicioProductoService) {}
+  constructor(
+    private productoService: ServicioProductoService,
+    private http: HttpClient
+  ) {}
 
-  // Acción al enviar el formulario
+  ngOnInit(): void {
+    this.http.get<any[]>('http://localhost:3000/categorias').subscribe(data => {
+      this.categorias = data.map(item => item.categoria);
+    });
+  }
+
   onSubmit(): void {
-    if (!this.nombre || !this.categoria || this.precio <= 0) {
-      alert('Por favor completá nombre, categoría y un precio mayor a 0.');
-      return;
-    }
+   
+if (!this.nombre || !this.categoria || this.precio <= 0) {
+  return;
+}
+
 
     const producto = {
       nombre: this.nombre,
@@ -38,7 +46,6 @@ export class AltaComponent {
       cantidad: 0
     };
 
-    // Enviar a la API
     this.productoService.crearProducto(producto).subscribe({
       next: () => {
         alert('¡Producto guardado!');
@@ -58,5 +65,4 @@ export class AltaComponent {
     this.descripcion = '';
     this.imagen = '';
   }
-
 }
