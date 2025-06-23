@@ -24,11 +24,14 @@
   border-radius: 5px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  z-index: 2;
+  position: relative;
 }
 
 .boton-volver:hover {
   background-color: #dddddd;
 }
+
 
 
 

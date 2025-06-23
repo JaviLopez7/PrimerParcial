@@ -1,55 +1,58 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Producto } from '../../interfaces/producto';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
-import { RouterLink } from '@angular/router';
+import { Producto } from '../../interfaces/producto';
 
 @Component({
-  selector: 'app-editar',
-  standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink],
-  templateUrl: './editar.component.html',
-  styleUrl: './editar.component.css'
+  selector: 'app-editar-producto',
+  templateUrl: './editar-producto.component.html',
+  styleUrls: ['./editar-producto.component.css']
 })
-export class EditarComponent {
+export class EditarProductoComponent implements OnInit {
 
-  productos: Producto[] = [];
-  campoOrden: keyof Producto | '' = '';
-  ordenAscendente: boolean = true;
+  productoEditado: Producto = {
+    id: 0,
+    nombre: '',
+    categoria: '',
+    precio: 0
+  };
 
-  constructor(private productoService: ServicioProductoService) {}
+  exitoAlGuardar: boolean = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private servicioProducto: ServicioProductoService
+  ) {}
 
   ngOnInit(): void {
-    this.cargarProductos();
-  }
-
-  cargarProductos(): void {
-    this.productoService.listarProductos().subscribe({
-      next: (productos) => {
-        this.productos = productos;
-        console.log('Productos cargados:', productos);
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.servicioProducto.obtenerProductoPorId(id).subscribe({
+      next: (producto) => {
+        this.productoEditado = producto;
       },
-      error: (err) => console.error('Error al cargar productos:', err)
+      error: (err) => {
+        console.error('Error al obtener el producto:', err);
+        this.router.navigate(['/gestion-producto']);
+      }
     });
   }
 
-  ordenarPor(campo: keyof Producto): void {
-    if (this.campoOrden === campo) {
-      this.ordenAscendente = !this.ordenAscendente;
-    } else {
-      this.campoOrden = campo;
-      this.ordenAscendente = true;
-    }
-
-    this.productos.sort((a, b) => {
-      const valorA = a[campo];
-      const valorB = b[campo];
-
-      if (valorA < valorB) return this.ordenAscendente ? -1 : 1;
-      if (valorA > valorB) return this.ordenAscendente ? 1 : -1;
-      return 0;
+  guardarCambios(): void {
+    this.servicioProducto.actualizarProducto(this.productoEditado).subscribe({
+      next: () => {
+        this.exitoAlGuardar = true;
+        setTimeout(() => this.exitoAlGuardar = false, 4000);
+      },
+      error: (err) => {
+        console.error('Error al actualizar el producto:', err);
+        // Aquí podrías mostrar un mensaje de error si querés
+      }
     });
+  }
+
+  cancelar(): void {
+    this.router.navigate(['/gestion-producto']);
   }
 }
 

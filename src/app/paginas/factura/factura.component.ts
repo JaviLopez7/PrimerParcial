@@ -1,20 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Producto } from '../../interfaces/producto';
 import { CommonModule } from '@angular/common';
 import { ServicoTipoCambioService } from '../../servicios/servico-tipo-cambio.service';
-import { RouterLink } from '@angular/router';
-import { Location } from '@angular/common';
-import { Router } from '@angular/router';
-
-
 
 @Component({
   selector: 'app-factura',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './factura.component.html',
   styleUrl: './factura.component.css'
 })
-export class FacturaComponent {
+export class FacturaComponent implements OnInit {
 
   @Input() productos: Producto[] = [];
   @Output() confirmarCompra = new EventEmitter<{
@@ -26,49 +22,31 @@ export class FacturaComponent {
 
   tipoCambio: number = 0;
 
-  constructor(
-  private tipoCambioService: ServicoTipoCambioService,
-  private location: Location,
-  private router: Router
+  constructor(private tipoCambioService: ServicoTipoCambioService) {}
 
-) {}
+  ngOnInit(): void {
+    const fechaDesde = '2024-01-01';
+    const hoy = new Date().toISOString().split('T')[0];
 
-
-ngOnInit(): void {
-  // Fecha desde: 2024-01-01
-  const fechaDesde = '2024-01-01'; 
-  // Fecha hasta: hoy (fecha actual)
-  const hoy = new Date().toISOString().split('T')[0];
-
-  // Llamada al servicio con las fechas ajustadas
-  this.tipoCambioService.getTipoCambio(fechaDesde, hoy).subscribe({
-    next: (respuesta: any) => {
-      if (respuesta?.results?.length > 0) {
-        const detalle = respuesta.results[0].detalle;
-        if (detalle && detalle.length > 0) {
+    this.tipoCambioService.getTipoCambio(fechaDesde, hoy).subscribe({
+      next: (respuesta: any) => {
+        const detalle = respuesta?.results?.[0]?.detalle;
+        if (detalle?.length > 0) {
           this.tipoCambio = Number(detalle[0].tipoCotizacion);
-        } else {
-          this.tipoCambio = 0;
         }
-      } else {
+      },
+      error: (error) => {
+        console.error('Error al obtener tipo de cambio:', error);
         this.tipoCambio = 0;
       }
-    },
-    error: (error) => {
-      console.error('Error al obtener tipo de cambio:', error);
-      this.tipoCambio = 0;
-    },
-    complete: () => {
-      console.log('Llamada a la API de tipo de cambio completada.');
-    }
-  });
-}
-
-  calcularTotalARS(precio: number, cantidad: number): number {
-    return precio * (cantidad || 1);
+    });
   }
 
-  calcularTotalUSD(precio: number, cantidad: number): number {
+  calcularTotalARS(precio: number, cantidad: number = 1): number {
+    return precio * cantidad;
+  }
+
+  calcularTotalUSD(precio: number, cantidad: number = 1): number {
     if (!this.tipoCambio || this.tipoCambio <= 0) return 0;
     return this.calcularTotalARS(precio, cantidad) / this.tipoCambio;
   }
@@ -85,8 +63,9 @@ ngOnInit(): void {
     return this.productos.reduce((sum, p) => sum + this.calcularTotalUSD(p.precio, p.cantidad), 0);
   }
 
-  onConfirmarCompra() {
+  onConfirmarCompra(): void {
     if (!this.productos || this.productos.length === 0) return;
+
     this.confirmarCompra.emit({
       productos: this.productos,
       totalARS: this.getTotalARS(),
@@ -94,12 +73,5 @@ ngOnInit(): void {
       tipoCambio: this.tipoCambio
     });
   }
-
-  #onCancelarCompra(): void {
-  
-   this.location.forward()
-  console.log('Compra cancelada');
 }
 
-  
-}

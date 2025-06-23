@@ -11,13 +11,12 @@ import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-factura-carrito',
   standalone: true,
-  imports: [FormsModule, CommonModule, FacturaComponent,RouterLink],
+  imports: [FormsModule, CommonModule, FacturaComponent, RouterLink],
   templateUrl: './factura-carrito.component.html',
   styleUrl: './factura-carrito.component.css'
 })
 export class FacturaCarritoComponent implements OnInit, OnDestroy {
-
-  productosDisponibles: (Producto & { seleccionado?: boolean })[] = [];
+  productosDisponibles: (Producto & { seleccionado?: boolean, cantidad?: number })[] = [];
   mostrarFactura: boolean = false;
   mostrarExito: boolean = false;
   tipoCambio: number = 0;
@@ -48,15 +47,16 @@ export class FacturaCarritoComponent implements OnInit, OnDestroy {
   cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
       next: productos => {
-        this.productosDisponibles = productos.map(p => ({ ...p, seleccionado: false }));
+        this.productosDisponibles = productos.map(p => ({ ...p, seleccionado: false, cantidad: 1 }));
       },
       error: err => console.error('Error al cargar productos:', err)
     });
   }
 
-  actualizarCarrito(producto: Producto & { seleccionado?: boolean }): void {
+  actualizarCarrito(producto: Producto & { seleccionado?: boolean, cantidad?: number }): void {
     if (producto.seleccionado) {
-      this.carritoService.agregarProducto(producto);
+      const cantidad = producto.cantidad ?? 1;
+      this.carritoService.actualizarProducto({ ...producto, cantidad });
     } else {
       this.carritoService.eliminarProducto(producto.id);
     }
@@ -66,34 +66,24 @@ export class FacturaCarritoComponent implements OnInit, OnDestroy {
     this.mostrarFactura = true;
   }
 
-  deshacerSeleccion(): void {
-    this.mostrarFactura = false;
-    this.productosDisponibles.forEach(p => p.seleccionado = false);
-    this.carritoService.vaciarCarrito();
-  }
-
   cerrarFactura(): void {
     this.mostrarFactura = false;
   }
 
+  manejarConfirmacionCompra(datosCompra: {
+    productos: Producto[],
+    totalARS: number,
+    totalUSD: number,
+    tipoCambio: number
+  }): void {
+    this.carritoService.vaciarCarrito();
+    this.mostrarFactura = false;
+    this.mostrarExito = true;
 
-manejarConfirmacionCompra(datosCompra: {
-  productos: Producto[],
-  totalARS: number,
-  totalUSD: number,
-  tipoCambio: number
-}): void {
-  console.log('Compra confirmada!', datosCompra);
-  this.carritoService.vaciarCarrito();
-  this.mostrarFactura = false;
-  this.mostrarExito = true;
-
-  // Esperar a que el cartel se vea bien antes de redirigir
-  setTimeout(() => {
-    this.router.navigate(['/gestion']);
-  }, 3000); // redirige después de 3 segundos
-}
-
+    setTimeout(() => {
+      this.router.navigate(['/gestion']);
+    }, 3000);
+  }
 
   obtenerTipoCambio(): void {
     const hoy = new Date().toISOString().split('T')[0];
@@ -107,4 +97,6 @@ manejarConfirmacionCompra(datosCompra: {
     });
   }
 }
+
+
 

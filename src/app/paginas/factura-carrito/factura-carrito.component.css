@@ -37,4 +37,12 @@
     transform: scale(1) translate(-50%, -50%);
   }
 }
+.input-cantidad {
+  max-width: 80px;
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+}
+
+
 
