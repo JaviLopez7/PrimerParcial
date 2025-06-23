@@ -19,7 +19,7 @@ export class AltaComponent {
   descripcion: string = '';
   imagen: string = '';
   categorias: string[] = [];
-  mostrarConfirmacion: boolean = false;
+  mostrarMensajeExito: boolean = false;
 
   constructor(
     private productoService: ServicioProductoService,
@@ -49,30 +49,19 @@ export class AltaComponent {
 
     this.productoService.crearProducto(producto).subscribe({
       next: () => {
-        this.mostrarConfirmacion = true;
+        this.mostrarMensajeExito = true;
+
+        setTimeout(() => {
+          this.mostrarMensajeExito = false;
+          this.location.back();
+        }, 2000);
       },
       error: (err) => {
         console.error('Error al guardar producto:', err);
-        alert('Ocurrió un error al guardar el producto.');
+        alert('❌ Ocurrió un error al guardar el producto.');
       }
     });
   }
-
-  agregarOtro(): void {
-    this.limpiarFormulario();
-    this.mostrarConfirmacion = false;
-  }
-
-  volver(): void {
-    this.location.back();
-  }
-
-  limpiarFormulario(): void {
-    this.nombre = '';
-    this.categoria = '';
-    this.precio = 0;
-    this.descripcion = '';
-    this.imagen = '';
-  }
 }
+
 

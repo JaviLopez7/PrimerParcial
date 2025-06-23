@@ -1,3 +1,12 @@
+<!-- Cartel de éxito -->
+
+<div *ngIf="mostrarMensajeExito"
+     class="position-fixed top-50 start-50 translate-middle alert alert-success shadow-lg text-center px-5 py-4 fs-4"
+     style="z-index: 1050; width: auto; max-width: 90%;">
+  ✅ Producto agregado con éxito
+</div>
+
+
 <!-- Contenedor principal -->
 <div class="container-fluid vh-100 d-flex justify-content-center align-items-center" style="background: url('URL_DE_TU_IMAGEN') no-repeat center center; background-size: cover;">
   <div class="card shadow-lg bg-light bg-opacity-75 p-4" style="width: 500px;">
@@ -45,23 +54,6 @@
   </div>
 </div>
 
-<!-- Modal de confirmación -->
-<div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title" id="confirmacionModalLabel">✅ Producto agregado</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body text-center fs-5">
-        Producto agregado correctamente.
-      </div>
-      <div class="modal-footer d-flex justify-content-center gap-3">
-        <button type="button" class="btn btn-outline-success" (click)="agregarOtro()" data-bs-dismiss="modal">Agregar otro producto</button>
-        <button type="button" class="btn btn-outline-secondary" (click)="volver()" data-bs-dismiss="modal">Volver</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 
