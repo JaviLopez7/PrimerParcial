@@ -1,51 +1,51 @@
 <div class="container mx-auto px-4 py-6">
   <div class="overflow-x-auto shadow-md rounded-lg mb-4">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
+    <table class="table table-bordered text-center align-middle w-100">
+      <thead class="table-light">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Unitario ARS</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total ARS</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Unitario USD</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total USD</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario ARS</th>
+          <th>Total ARS</th>
+          <th>Precio Unitario USD</th>
+          <th>Total USD</th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr *ngFor="let producto of productos" class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap">{{ producto.nombre }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ producto.cantidad || 1 }}</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ producto.precio | currency:'ARS':'symbol':'1.2-2' }}</td>
-          <td class="px-6 py-4 whitespace-nowrap font-semibold text-green-600">
+      <tbody>
+        <tr *ngFor="let producto of productos">
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.cantidad || 1 }}</td>
+          <td>{{ producto.precio | currency:'ARS':'symbol':'1.2-2' }}</td>
+          <td class="text-success fw-semibold">
             {{ calcularTotalARS(producto.precio, producto.cantidad) | currency:'ARS':'symbol':'1.2-2' }}
           </td>
-          <td class="px-6 py-4 whitespace-nowrap">
+          <td>
             {{ (producto.precio / tipoCambio) | currency:'USD':'symbol':'1.2-2' }}
           </td>
-          <td class="px-6 py-4 whitespace-nowrap font-semibold text-green-600">
+          <td class="text-success fw-semibold">
             {{ calcularTotalUSD(producto.precio, producto.cantidad) | currency:'USD':'symbol':'1.2-2' }}
           </td>
         </tr>
       </tbody>
-      <tfoot class="bg-gray-100 font-semibold">
+      <tfoot class="table-light fw-semibold">
         <tr>
-          <td class="px-6 py-4 whitespace-nowrap">Total</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ getTotalCantidad() }}</td>
-          <td class="px-6 py-4 whitespace-nowrap"></td>
-          <td class="px-6 py-4 whitespace-nowrap text-green-700">{{ getTotalARS() | currency:'ARS':'symbol':'1.2-2' }}</td>
-          <td class="px-6 py-4 whitespace-nowrap"></td>
-          <td class="px-6 py-4 whitespace-nowrap text-green-700">{{ getTotalUSD() | currency:'USD':'symbol':'1.2-2' }}</td>
+          <td>Total</td>
+          <td>{{ getTotalCantidad() }}</td>
+          <td></td>
+          <td class="text-success">{{ getTotalARS() | currency:'ARS':'symbol':'1.2-2' }}</td>
+          <td></td>
+          <td class="text-success">{{ getTotalUSD() | currency:'USD':'symbol':'1.2-2' }}</td>
         </tr>
       </tfoot>
     </table>
   </div>
 
-  <div class="flex justify-end mt-4">
+  <div class="d-flex justify-content-end mt-4">
     <button 
       (click)="onConfirmarCompra()"
-      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+      class="btn btn-primary"
       [disabled]="!productos || productos.length === 0">
-      <i class="fas fa-check-circle mr-2"></i> Confirmar Compra
+      <i class="fas fa-check-circle me-2"></i> Confirmar Compra
     </button>
   </div>
 </div>

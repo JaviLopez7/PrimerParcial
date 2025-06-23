@@ -33,7 +33,7 @@
       <button 
         class="btn btn-secondary"
         *ngIf="mostrarFactura"
-        (click)="deshacerSeleccion()">
+        (click)="cerrarFactura()">
         Deshacer
       </button>
 
@@ -44,14 +44,32 @@
         Confirmar selección
       </button>
     </div>
-
-    <div class="mt-4" *ngIf="mostrarFactura">
-      <app-factura 
-        [productos]="carritoService.obtenerProductos()"
-        (confirmarCompra)="manejarConfirmacionCompra($event)">
-      </app-factura>
-    </div>
   </div>
+</div>
+
+<!-- Modal de factura -->
+<div *ngIf="mostrarFactura" class="modal-factura-backdrop">
+  <div class="modal-factura-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="m-0">Factura</h4>
+      <button class="btn-close" aria-label="Cerrar" (click)="cerrarFactura()"></button>
+    </div>
+
+    
+    <app-factura 
+      [productos]="carritoService.obtenerProductos()"
+      (confirmarCompra)="manejarConfirmacionCompra($event)">
+    </app-factura>
+  </div>
+
+  
+</div>
+
+
+<div *ngIf="mostrarExito"
+     class="alert alert-success text-center position-fixed top-50 start-50 translate-middle shadow-lg p-5 rounded fs-4 fw-bold"
+     style="z-index: 2000; width: 90%; max-width: 600px;">
+  🎉 ¡Compra confirmada con éxito!
 </div>
 
 

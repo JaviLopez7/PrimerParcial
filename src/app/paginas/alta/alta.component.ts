@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; // <-- necesario para *ngIf y ngClass
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-alta',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule], // <-- agregá CommonModule y HttpClientModule
+  imports: [FormsModule, CommonModule, HttpClientModule],
   templateUrl: './alta.component.html',
   styleUrl: './alta.component.css'
 })
@@ -18,10 +19,12 @@ export class AltaComponent {
   descripcion: string = '';
   imagen: string = '';
   categorias: string[] = [];
+  mostrarConfirmacion: boolean = false;
 
   constructor(
     private productoService: ServicioProductoService,
-    private http: HttpClient
+    private http: HttpClient,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -31,11 +34,9 @@ export class AltaComponent {
   }
 
   onSubmit(): void {
-   
-if (!this.nombre || !this.categoria || this.precio <= 0) {
-  return;
-}
-
+    if (!this.nombre || !this.categoria || this.precio <= 0) {
+      return;
+    }
 
     const producto = {
       nombre: this.nombre,
@@ -48,14 +49,22 @@ if (!this.nombre || !this.categoria || this.precio <= 0) {
 
     this.productoService.crearProducto(producto).subscribe({
       next: () => {
-        alert('¡Producto guardado!');
-        this.limpiarFormulario();
+        this.mostrarConfirmacion = true;
       },
       error: (err) => {
         console.error('Error al guardar producto:', err);
         alert('Ocurrió un error al guardar el producto.');
       }
     });
+  }
+
+  agregarOtro(): void {
+    this.limpiarFormulario();
+    this.mostrarConfirmacion = false;
+  }
+
+  volver(): void {
+    this.location.back();
   }
 
   limpiarFormulario(): void {
@@ -66,3 +75,4 @@ if (!this.nombre || !this.categoria || this.precio <= 0) {
     this.imagen = '';
   }
 }
+

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Producto } from '../../interfaces/producto';
 import { ServicioProductoService } from '../../servicios/servicio-producto.service';
 import { ServicoTipoCambioService } from '../../servicios/servico-tipo-cambio.service';
@@ -6,6 +6,7 @@ import { ServicioCarritoService } from '../../servicios/servicio-carrito.service
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FacturaComponent } from '../factura/factura.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-factura-carrito',
@@ -14,22 +15,35 @@ import { FacturaComponent } from '../factura/factura.component';
   templateUrl: './factura-carrito.component.html',
   styleUrl: './factura-carrito.component.css'
 })
-export class FacturaCarritoComponent {
+export class FacturaCarritoComponent implements OnInit, OnDestroy {
 
   productosDisponibles: (Producto & { seleccionado?: boolean })[] = [];
   mostrarFactura: boolean = false;
+  mostrarExito: boolean = false;
   tipoCambio: number = 0;
 
   constructor(
     private productoService: ServicioProductoService,
     private tipoCambioService: ServicoTipoCambioService,
-    public carritoService: ServicioCarritoService
+    public carritoService: ServicioCarritoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.cargarProductos();
     this.obtenerTipoCambio();
+    document.addEventListener('keydown', this.escListener);
   }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('keydown', this.escListener);
+  }
+
+  escListener = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && this.mostrarFactura) {
+      this.cerrarFactura();
+    }
+  };
 
   cargarProductos(): void {
     this.productoService.listarProductos().subscribe({
@@ -44,7 +58,7 @@ export class FacturaCarritoComponent {
     if (producto.seleccionado) {
       this.carritoService.agregarProducto(producto);
     } else {
-      this.carritoService.eliminarProducto(producto.id); // ✅ corregido aquí
+      this.carritoService.eliminarProducto(producto.id);
     }
   }
 
@@ -52,21 +66,32 @@ export class FacturaCarritoComponent {
     this.mostrarFactura = true;
   }
 
-  manejarConfirmacionCompra(datosCompra: {
-    productos: Producto[],
-    totalARS: number,
-    totalUSD: number,
-    tipoCambio: number
-  }): void {
-    console.log('Compra confirmada!', datosCompra);
+  deshacerSeleccion(): void {
+    this.mostrarFactura = false;
+    this.productosDisponibles.forEach(p => p.seleccionado = false);
     this.carritoService.vaciarCarrito();
+  }
+
+  cerrarFactura(): void {
     this.mostrarFactura = false;
   }
-  
-deshacerSeleccion(): void {
-  this.mostrarFactura = false;
-  this.productosDisponibles.forEach(p => p.seleccionado = false);
+
+
+manejarConfirmacionCompra(datosCompra: {
+  productos: Producto[],
+  totalARS: number,
+  totalUSD: number,
+  tipoCambio: number
+}): void {
+  console.log('Compra confirmada!', datosCompra);
   this.carritoService.vaciarCarrito();
+  this.mostrarFactura = false;
+  this.mostrarExito = true;
+
+  // Esperar a que el cartel se vea bien antes de redirigir
+  setTimeout(() => {
+    this.router.navigate(['/gestion']);
+  }, 3000); // redirige después de 3 segundos
 }
 
 
@@ -82,3 +107,4 @@ deshacerSeleccion(): void {
     });
   }
 }
+

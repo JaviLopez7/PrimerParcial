@@ -1,10 +1,11 @@
+<!-- Contenedor principal -->
 <div class="container-fluid vh-100 d-flex justify-content-center align-items-center" style="background: url('URL_DE_TU_IMAGEN') no-repeat center center; background-size: cover;">
   <div class="card shadow-lg bg-light bg-opacity-75 p-4" style="width: 500px;">
     <div class="card-header bg-success text-white text-center">
       <h2 class="mb-0 fs-3">Registro de Producto</h2>
     </div>
+
     <form #productoForm="ngForm" (ngSubmit)="onSubmit()" class="card-body d-flex flex-column gap-3 fs-5">
-      
       <div>
         <label class="form-label">Nombre:</label>
         <input type="text" name="nombre" [(ngModel)]="nombre" #nombreRef="ngModel" required class="form-control" [ngClass]="{'is-invalid': nombreRef.invalid && nombreRef.touched}">
@@ -15,9 +16,7 @@
 
       <div>
         <label class="form-label">Categoría:</label>
-        <select name="categoria" [(ngModel)]="categoria" #categoriaRef="ngModel" required class="form-select" [ngClass]="{'is-invalid': categoriaRef.invalid && categoriaRef.touched}">
-          <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
-        </select>
+        <input type="text" name="categoria" [(ngModel)]="categoria" #categoriaRef="ngModel" required class="form-control" [ngClass]="{'is-invalid': categoriaRef.invalid && categoriaRef.touched}">
         <div *ngIf="categoriaRef.invalid && categoriaRef.touched" class="invalid-feedback">
           La categoría es obligatoria.
         </div>
@@ -25,9 +24,7 @@
 
       <div>
         <label class="form-label">Precio:</label>
-        <input type="number" name="precio" [(ngModel)]="precio" #precioRef="ngModel"
-       required min="1" class="form-control"
-       [ngClass]="{'is-invalid': precioRef.invalid && precioRef.touched}">
+        <input type="number" name="precio" [(ngModel)]="precio" #precioRef="ngModel" required min="1" class="form-control" [ngClass]="{'is-invalid': precioRef.invalid && precioRef.touched}">
         <div *ngIf="precioRef.invalid && precioRef.touched" class="invalid-feedback">
           El precio es obligatorio y debe ser mayor a 0.
         </div>
@@ -35,21 +32,36 @@
 
       <div>
         <label class="form-label">Descripción:</label>
-        <textarea name="descripcion" [(ngModel)]="descripcion" #descripcionRef="ngModel" required class="form-control" rows="3" [ngClass]="{'is-invalid': descripcionRef.invalid && descripcionRef.touched}"></textarea>
-        <div *ngIf="descripcionRef.invalid && descripcionRef.touched" class="invalid-feedback">
-          La descripción es obligatoria.
-        </div>
+        <textarea name="descripcion" [(ngModel)]="descripcion" class="form-control" rows="3"></textarea>
       </div>
 
       <div>
         <label class="form-label">Imagen (URL):</label>
-        <input type="text" name="imagen" [(ngModel)]="imagen" #imagenRef="ngModel" required class="form-control" [ngClass]="{'is-invalid': imagenRef.invalid && imagenRef.touched}">
-        <div *ngIf="imagenRef.invalid && imagenRef.touched" class="invalid-feedback">
-          La URL de la imagen es obligatoria.
-        </div>
+        <input type="text" name="imagen" [(ngModel)]="imagen" class="form-control">
       </div>
 
       <button type="submit" class="btn btn-success w-100 fs-5 mt-3">Guardar Producto</button>
     </form>
   </div>
 </div>
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="confirmacionModalLabel">✅ Producto agregado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center fs-5">
+        Producto agregado correctamente.
+      </div>
+      <div class="modal-footer d-flex justify-content-center gap-3">
+        <button type="button" class="btn btn-outline-success" (click)="agregarOtro()" data-bs-dismiss="modal">Agregar otro producto</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="volver()" data-bs-dismiss="modal">Volver</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
