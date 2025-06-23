@@ -21,4 +21,19 @@ body::before {
   pointer-events: none
 }
 
+body.fondo-no-encontrado {
+  background-image: url('assets/404.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+body.fondo-no-encontrado::before {
+  background: none !important;
+  content: none !important;
+}
+
+
+
+
 /* You can add global styles to this file, and also import other style files */

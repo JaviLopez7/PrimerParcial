@@ -95,7 +95,7 @@ ngOnInit(): void {
     });
   }
 
-  onCancelarCompra(): void {
+  #onCancelarCompra(): void {
   
    this.location.forward()
   console.log('Compra cancelada');
